@@ -24,6 +24,17 @@ def search_books(query, search_type):
         return []
     return format_data(data)
 
+def search_book_by_id(book_id):
+    google_books_api_url = f'https://www.googleapis.com/books/v1/volumes/{book_id}?key={api_key}'
+    
+    response = requests.get(google_books_api_url)
+    data = response.json()
+
+    if response.status_code != 200:
+        print(f"Error: API request returned status code {response.status_code}")
+        return None
+    return data
+
 def format_data(data):
     formatted_data = []
     for item in data['items']:

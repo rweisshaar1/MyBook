@@ -6,9 +6,9 @@
   {% for book in results %}
   <div class="col-md-4">
     <div class="card mb-4 max-card-height hover">
-      <a class="no-color" href="#">
+      <a href="/book/{{book.id}}" class="no-color" href="#">
         {% if book.image %}
-        <img src={{ book.image }} class="card-img-top square" alt="Book image" />
+        <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
         {% endif %}
         <div class="card-body">
           <h5 class="card-title">{{ book.title }}</h5>

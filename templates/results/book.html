@@ -1,0 +1,29 @@
+{% include 'components/header.html' %}
+{% include 'components/navbar.html' %}
+
+<main>
+  <div class="container mt-2">
+
+    <h1>MyBook</h1>
+
+    <div class="card">
+      <div class="card-body">
+      <h3>Book Details:</h3>
+      <h4 class="card-title">{{book.volumeInfo.title}}</h4>
+        <img src="{{book.volumeInfo.imageLinks.thumbnail}}" alt="Book image"/>
+        <p>{{book.volumeInfo.authors}}</p>
+        <p>{{book.volumeInfo.description}}</p>
+        <p>Published: {{book.volumeInfo.publishedDate}}</p>
+        <p>Publisher: {{book.volumeInfo.publisher}}</p>
+        <p>Pages: {{book.volumeInfo.pageCount}}</p>
+        <p>Categories: {{book.volumeInfo.categories}}</p>
+        <p>Rating: {{book.volumeInfo.averageRating}}</p>
+      </div>
+    </div>
+
+
+
+  </div>
+</main>
+
+{% include 'components/footer.html' %}
