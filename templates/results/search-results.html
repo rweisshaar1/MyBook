@@ -1,0 +1,41 @@
+<div class="">
+  <h2>Search Results:</h2>
+</div>
+<div class="row">
+  <!-- map over this -->
+  {% for book in results %}
+  <div class="col-md-4">
+    <div class="card mb-4 max-card-height hover">
+      <a class="no-color" href="#">
+        {% if book.image %}
+        <img src={{ book.image }} class="card-img-top square" alt="Book image" />
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">{{ book.title }}</h5>
+          <p class="card-text">
+            {{ book.authors }}
+          </p>
+          <p class="card-text">
+            {{ book.description }}
+          </p>
+      </a>
+
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" data-mdb-toggle="dropdown" type="button" id="dropdownMenuButton" data-mdb-dropdown-init
+          data-mdb-ripple-init aria-expanded="false">
+          Save
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <li><a class="dropdown-item" href="">Want To Read</a></li>
+          <li><a class="dropdown-item" href="">Reading</a></li>
+          <li><a class="dropdown-item" href="">Have Read</a></li>
+          <li><a class="dropdown-item" href="">Favorites</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<h3>No results found</h3>
+{% endfor %}
+</div>
