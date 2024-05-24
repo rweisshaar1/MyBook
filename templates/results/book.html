@@ -9,15 +9,15 @@
     <div class="card">
       <div class="card-body">
       <h3>Book Details:</h3>
-      <h4 class="card-title">{{book.volumeInfo.title}}</h4>
-        <img src="{{book.volumeInfo.imageLinks.thumbnail}}" alt="Book image"/>
-        <p>{{book.volumeInfo.authors}}</p>
-        <p>{{book.volumeInfo.description}}</p>
-        <p>Published: {{book.volumeInfo.publishedDate}}</p>
-        <p>Publisher: {{book.volumeInfo.publisher}}</p>
-        <p>Pages: {{book.volumeInfo.pageCount}}</p>
-        <p>Categories: {{book.volumeInfo.categories}}</p>
-        <p>Rating: {{book.volumeInfo.averageRating}}</p>
+      <h4 class="card-title">{{book.title}}</h4>
+        <img src="{{book.image}}" alt="Book image"/>
+        <p>{{book.authors}}</p>
+        <p>{{ book.description|safe }}</p>
+        <p><strong>Published:</strong> {{book.publishedDate}}</p>
+        <p><strong>Publisher:</strong> {{book.publisher}}</p>
+        <p><strong>Pages:</strong> {{book.pageCount}}</p>
+        <p><strong>Categories:</strong> {{book.categories}}</p>
+        <p><strong>Rating:</strong> {{book.averageRating}}</p>
       </div>
     </div>
 

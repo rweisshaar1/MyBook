@@ -33,7 +33,23 @@ def search_book_by_id(book_id):
     if response.status_code != 200:
         print(f"Error: API request returned status code {response.status_code}")
         return None
-    return data
+    return format_single_book(data)
+
+def format_single_book(data):
+    authors = ", ".join(data['volumeInfo'].get('authors', []))
+    formatted_data = {
+        'id': data['id'],
+        'title': data['volumeInfo'].get('title', ''),
+        'authors': authors,
+        'description': data['volumeInfo'].get('description', ''),
+        'image': data['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
+        'publishedDate': data['volumeInfo'].get('publishedDate', ''),
+        'publisher': data['volumeInfo'].get('publisher', ''),
+        'pageCount': data['volumeInfo'].get('pageCount', ''),
+        'categories': ", ".join(data['volumeInfo'].get('categories', [])),
+        'rating': data['volumeInfo'].get('averageRating', ''),
+    }
+    return formatted_data
 
 def format_data(data):
     formatted_data = []
@@ -45,6 +61,7 @@ def format_data(data):
             'title': item['volumeInfo'].get('title', ''),
             'authors': authors,
             'description': description,
-            'image': item['volumeInfo'].get('imageLinks', {}).get('thumbnail', '')
+            'image': item['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
+            'rating': item['volumeInfo'].get('averageRating', ''),
         })
     return formatted_data
