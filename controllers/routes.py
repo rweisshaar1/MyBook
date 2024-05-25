@@ -4,6 +4,7 @@ from flask import request, redirect, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
 from models.user import User
+from models.book import add_book, get_books, get_recommendations
 
 main = Blueprint('main', __name__)
 
@@ -39,7 +40,12 @@ def logout():
 @main.route('/')
 @login_required
 def home():
-    return render_template('main/home.html')
+    books = get_books(current_user.id)
+    random_book = get_recommendations(current_user.id, 2)
+    print(random_book)
+    return render_template('main/home.html', 
+                           books=books,
+                           random_books=random_book)
 
 # Search route
 @main.route('/search', methods=['GET'])
@@ -60,3 +66,26 @@ def get_book(book_id):
     book = search_book_by_id(book_id)
     # print(book)
     return render_template('results/book.html', book=book)
+
+# POST routes
+@main.route('/addbook', methods=['POST'])
+@login_required
+def handler():
+    title = request.form.get('title')
+    book_id = request.form.get('book_id')
+    image = request.form.get('image')
+    authors = request.form.get('authors')
+    user_id = current_user.id
+    status = request.form.get('status')
+    rating = request.form.get('rating')
+    user_rating = request.form.get('user_rating')
+    comment = request.form.get('comment')
+    print("title: ", title)
+    print("book_id: ", book_id)
+    print("image: ", image)
+    print("authors: ", authors)
+    print("rating: ", rating)
+    print("user_id: ", user_id)
+    print("status: ", status)
+    add_book(book_id, image, title, authors, user_id, rating, user_rating, status, comment)
+    return redirect(url_for('main.home'))

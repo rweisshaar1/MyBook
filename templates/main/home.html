@@ -34,8 +34,42 @@
 
     <div class="container" id="Results">
       <div class="">
-        <h2>Reading</h2>
+        <h2>Recommended For You:</h2>
+        <div class="row">
+        {% for book in recommended_books %}
+        <div class="col-md-4">
+          <a href="/book/{{book.book_id}}" class="no-color hover">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">{{book.title}}</h4>
+              <img src="{{book.image}}" alt="Book image"/>
+              <p>{{book.authors}}</p>
+            </div>
+          </div>  
+        </a>
+        </div>
+      {% endfor %}
+        </div>
 
+        <h2>Reading</h2>
+        <div class="row">
+        {% for book in books %}
+        {% if book.status == "Reading" %}
+        <div class="col-md-4">
+          <a href="/book/{{book.book_id}}" class="no-color hover">
+          <div class="card">
+            <div class="card-body">
+              <h3>Book Details:</h3>
+              <h4 class="card-title">{{book.title}}</h4>
+              <img src="{{book.image}}" alt="Book image"/>
+              <p>{{book.authors}}</p>
+            </div>
+          </div>  
+        </a>
+        </div>
+        {% endif %}
+      {% endfor %}
+      </div>
       </div>
 
       <div class="">

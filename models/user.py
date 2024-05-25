@@ -23,3 +23,4 @@ class User(UserMixin, db.Model):
 
     def get_id(self):
         return str(self.id)
+

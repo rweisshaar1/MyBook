@@ -26,10 +26,34 @@
           Save
         </button>
         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-          <li><a class="dropdown-item" href="">Want To Read</a></li>
-          <li><a class="dropdown-item" href="">Reading</a></li>
-          <li><a class="dropdown-item" href="">Have Read</a></li>
-          <li><a class="dropdown-item" href="">Favorites</a></li>
+          <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+            hx-vals='{"book_id":"{{book.id}}",
+            "title":"{{book.title}}",
+            "authors":"{{book.authors}}",
+            "image":"{{book.image}}",
+            "rating":"{{book.rating}}",
+            "status":"Want To Read"}'>Want To Read</a></li>
+          <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+            hx-vals='{"book_id":"{{book.id}}",
+            "title":"{{book.title}}",
+            "authors":"{{book.authors}}",
+            "image":"{{book.image}}",
+            "rating":"{{book.rating}}",
+            "status":"Reading"}'>Reading</a></li>
+          <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+            hx-vals='{"book_id":"{{book.id}}",
+            "title":"{{book.title}}",
+            "authors":"{{book.authors}}",
+            "image":"{{book.image}}",
+            "rating":"{{book.rating}}",
+            "status":"Have Read"}'>Have Read</a></li>
+          <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+            hx-vals='{"book_id":"{{book.id}}",
+            "title":"{{book.title}}",
+            "authors":"{{book.authors}}",
+            "image":"{{book.image}}",
+            "rating":"{{book.rating}}",
+            "status":"Favorites"}'>Favorites</a></li>
         </ul>
       </div>
     </div>

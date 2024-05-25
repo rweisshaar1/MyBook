@@ -14,8 +14,6 @@ def search_books(query, search_type):
     response = requests.get(google_books_api_url)
     data = response.json()
 
-    print(data)
-
     if response.status_code != 200:
         print(f"Error: API request returned status code {response.status_code}")
         return []
@@ -61,6 +59,7 @@ def format_data(data):
             'title': item['volumeInfo'].get('title', ''),
             'authors': authors,
             'description': description,
+            'rating': item['volumeInfo'].get('averageRating', ''),
             'image': item['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
             'rating': item['volumeInfo'].get('averageRating', ''),
         })
