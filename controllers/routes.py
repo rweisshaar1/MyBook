@@ -1,10 +1,10 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, make_response
 from controllers.search import search_books, search_book_by_id
 from flask import request, redirect, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
 from models.user import User
-from models.book import add_book, get_books, get_recommendations, get_book_by_id
+from models.book import add_book, get_books, get_recommendations, get_book_by_id, update_book, delete_book
 
 main = Blueprint('main', __name__)
 
@@ -43,8 +43,13 @@ def home():
     books = get_books(current_user.id)
     search_page = False
     random_book, reason = get_recommendations(2, current_user.id, search_page)
+    if random_book == []:
+        random_book = None
+        reason = None
+    
     return render_template('main/home.html', 
                            books=books,
+                           saved_books=books,
                            recommended_books=random_book,
                            reason=reason)
 
@@ -91,12 +96,45 @@ def handler():
     user_rating = request.form.get('user_rating')
     comment = request.form.get('comment')
     genre = request.form.get('genre')
-    print("title: ", title)
-    print("book_id: ", book_id)
-    print("image: ", image)
-    print("authors: ", authors)
-    print("rating: ", rating)
-    print("user_id: ", user_id)
-    print("status: ", status)
+    # print("title: ", title)
+    # print("book_id: ", book_id)
+    # print("image: ", image)
+    # print("authors: ", authors)
+    # print("rating: ", rating)
+    # print("user_id: ", user_id)
+    # print("status: ", status)
     add_book(book_id, image, title, authors, genre, user_id, rating, user_rating, status, comment)
     return redirect(url_for('main.home'))
+
+@main.route('/updatebook', methods=['PUT'])
+@login_required
+def updating_book():
+    currentUrl = request.referrer
+    user_id = current_user.id
+    book_id = request.form.get('book_id')
+    status = request.form.get('status')
+    user_rating = request.form.get('user_rating')
+    comment = request.form.get('comment')
+    updates = {}
+    if status:
+        updates['status'] = status
+    
+    print("url: ", currentUrl)
+    print("book_id: ", book_id)
+    print("updates: ", updates)
+    update_book(user_id, book_id, updates)
+
+    response = make_response("", 200)
+    response.headers['HX-Redirect'] = currentUrl
+    return response
+    
+@main.route('/removebook', methods=['DELETE'])
+@login_required
+def deleting_book():
+    currentUrl = request.referrer
+    user_id = current_user.id
+    book_id = request.form.get('book_id')
+    delete_book(user_id, book_id)
+    
+    response = make_response("", 200)
+    return response

@@ -54,16 +54,16 @@ def get_book_by_id(user_id, book_id):
     return Book.query.filter_by(user_id=user_id).filter_by(book_id=book_id).first()
 
 # will look like update_book(1, {'title': 'New Title', 'author': 'New Author'})
-def update_book(book_id, updates):
-    book = get_book_by_id(book_id)
+def update_book(user_id, book_id, updates):
+    book = get_book_by_id(user_id, book_id)
     for key, value in updates.items():
         if hasattr(book, key):
             setattr(book, key, value)
     db.session.commit()
     return book
 
-def delete_book(book_id):
-    book = get_book_by_id(book_id)
+def delete_book(user_id, book_id):
+    book = get_book_by_id(user_id, book_id)
     db.session.delete(book)
     db.session.commit()
     return book
@@ -77,8 +77,9 @@ def get_random_books(n, user_id):
 # Get book recommendations for a user
 def get_recommendations(n, user_id, search_page):
     # Check if there are any books in the database
-    if Book.query.count() == 0:
-        return []
+    if Book.query.count() == 0 or Book.query.count() == 1:
+        print('No books in db found')
+        return None, None
 
     # Get a number of random books
     books = get_random_books(n, user_id)
@@ -86,7 +87,7 @@ def get_recommendations(n, user_id, search_page):
     # If no books are found, return an empty list
     if not books:
         print('No books in db found')
-        return []
+        return None, None
         
     # Construct the reason for the recommendations
     
@@ -142,6 +143,7 @@ def get_recommendations(n, user_id, search_page):
         books = format_data({'items': recommended_books})
     else:
         books = format_data({'items': recommended_books})
+
 
     # Return the recommended books
     return books, reason

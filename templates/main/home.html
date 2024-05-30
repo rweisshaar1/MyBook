@@ -35,6 +35,7 @@
     <div class="container mt-2" id="Results">
       <div class="">
         <h2 class="fs-1">Recommended For You:</h2>
+        {% if recommended_books %}
         <h3 class="ms-4">{{ reason }}</h3>
         <div class="row">
           {% for book in recommended_books %}
@@ -52,67 +53,35 @@
                   <p class="card-text">
                     {{ book.description }}
                   </p>
-                  
+
               </a>
 
-              <div class="dropdown">
-                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button"
-                  id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
-                  Save
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                  "title":"{{book.title}}",
-                  "authors":"{{book.authors}}",
-                  "image":"{{book.image}}",
-                  "rating":"{{book.rating}}",
-                  "genre":"{{book.genre}}",
-                  "status":"Want To Read"}'>Want To Read</a></li>
-                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                  "title":"{{book.title}}",
-                  "authors":"{{book.authors}}",
-                  "image":"{{book.image}}",
-                  "rating":"{{book.rating}}",
-                  "genre":"{{book.genre}}",
-                  "status":"Reading"}'>Reading</a></li>
-                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                  "title":"{{book.title}}",
-                  "authors":"{{book.authors}}",
-                  "image":"{{book.image}}",
-                  "rating":"{{book.rating}}",
-                  "genre":"{{book.genre}}",
-                  "status":"Have Read"}'>Have Read</a></li>
-                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                  "title":"{{book.title}}",
-                  "authors":"{{book.authors}}",
-                  "image":"{{book.image}}",
-                  "rating":"{{book.rating}}",
-                  "genre":"{{book.genre}}",
-                  "status":"Favorites"}'>Favorites</a></li>
-                </ul>
-              </div>
+              {% with book=book, saved_book=saved_book %}
+              {% include 'components/save-button.html' %}
+              {% endwith %}
             </div>
           </div>
         </div>
-        {% else %}
-        <h3>Save Books to your Profile to Get recommendations</h3>
         {% endfor %}
+        {% endif %}
         {% if recommended_books %}
         <div class="d-flex justify-content-center fs-5">
           <a href="/recommendations">View More Recommendations</a>
         </div>
+        {% else %}
+        <h3>Save Books to your Profile to Get recommendations</h3>
         {% endif %}
       </div>
 
-      <h2>Reading</h2>
+      <h2 class="fs-1">Reading</h2>
       <div class="row">
         {% for book in books %}
         {% if book.status == "Reading" %}
-        <div class="col-md-4">
+        <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
           <div class="card mb-4 max-card-height hover">
             <a href="/book/{{book.book_id}}" class="no-color">
               {% if book.image %}
-              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
               {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ book.title }}</h5>
@@ -122,8 +91,12 @@
                 <p class="card-text">
                   {{ book.description }}
                 </p>
-              </div>
             </a>
+
+            {% with book=book, saved_book=book %}
+            {% include 'components/save-button.html' %}
+            {% endwith %}
+            </div> 
           </div>
         </div>
         {% endif %}
@@ -132,15 +105,15 @@
     </div>
 
     <div class="">
-      <h2>Want to Read</h2>
+      <h2 class="fs-1">Want to Read</h2>
       <div class="row">
         {% for book in books %}
         {% if book.status == "Want To Read" %}
-        <div class="col-md-4">
+        <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
           <div class="card mb-4 max-card-height hover">
             <a href="/book/{{book.book_id}}" class="no-color">
               {% if book.image %}
-              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
               {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ book.title }}</h5>
@@ -150,18 +123,23 @@
                 <p class="card-text">
                   {{ book.description }}
                 </p>
-              </div>
             </a>
+
+            {% with book=book, saved_book=book %}
+            {% include 'components/save-button.html' %}
+            {% endwith %}
           </div>
         </div>
-        {% endif %}
-        {% endfor %}
       </div>
-
+      {% endif %}
+      {% endfor %}
     </div>
 
   </div>
 
+  </div>
+
 </main>
+
 
 {% include 'components/footer.html' %}

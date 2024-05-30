@@ -24,42 +24,9 @@
                                 {{ book.description }}
                             </p>
                     </a>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button"
-                            id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
-                            Save
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                        "title":"{{book.title}}",
-                        "authors":"{{book.authors}}",
-                        "image":"{{book.image}}",
-                        "rating":"{{book.rating}}",
-                        "genre":"{{book.genre}}",
-                        "status":"Want To Read"}'>Want To Read</a></li>
-                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                        "title":"{{book.title}}",
-                        "authors":"{{book.authors}}",
-                        "image":"{{book.image}}",
-                        "rating":"{{book.rating}}",
-                        "genre":"{{book.genre}}",
-                        "status":"Reading"}'>Reading</a></li>
-                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                        "title":"{{book.title}}",
-                        "authors":"{{book.authors}}",
-                        "image":"{{book.image}}",
-                        "rating":"{{book.rating}}",
-                        "genre":"{{book.genre}}",
-                        "status":"Have Read"}'>Have Read</a></li>
-                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
-                        "title":"{{book.title}}",
-                        "authors":"{{book.authors}}",
-                        "image":"{{book.image}}",
-                        "rating":"{{book.rating}}",
-                        "genre":"{{book.genre}}",
-                        "status":"Favorites"}'>Favorites</a></li>
-                        </ul>
-                    </div>
+                    {% with book=book, saved_book=saved_book %}
+                        {% include 'components/save-button.html' %}
+                    {% endwith %}
                 </div>
             </div>
         </div>
