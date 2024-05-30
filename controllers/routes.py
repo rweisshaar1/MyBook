@@ -4,7 +4,7 @@ from flask import request, redirect, url_for
 from flask_login import login_required, login_user, logout_user, current_user
 from werkzeug.security import check_password_hash
 from models.user import User
-from models.book import add_book, get_books, get_recommendations
+from models.book import add_book, get_books, get_recommendations, get_book_by_id
 
 main = Blueprint('main', __name__)
 
@@ -41,11 +41,21 @@ def logout():
 @login_required
 def home():
     books = get_books(current_user.id)
-    random_book = get_recommendations(current_user.id, 2)
-    print(random_book)
+    search_page = False
+    random_book, reason = get_recommendations(2, current_user.id, search_page)
     return render_template('main/home.html', 
                            books=books,
-                           random_books=random_book)
+                           recommended_books=random_book,
+                           reason=reason)
+
+@main.route('/recommendations')
+@login_required
+def recommendations():
+    search_page = True
+    random_book, reason = get_recommendations(2, current_user.id, search_page)
+    return render_template('results/recommendations.html', 
+                           recommended_books=random_book,
+                           reason=reason)
 
 # Search route
 @main.route('/search', methods=['GET'])
@@ -64,8 +74,8 @@ def search():
 def get_book(book_id):
     print(book_id)
     book = search_book_by_id(book_id)
-    # print(book)
-    return render_template('results/book.html', book=book)
+    saved_book = get_book_by_id(current_user.id, book_id)
+    return render_template('results/book.html', book=book, saved_book=saved_book)
 
 # POST routes
 @main.route('/addbook', methods=['POST'])
@@ -80,6 +90,7 @@ def handler():
     rating = request.form.get('rating')
     user_rating = request.form.get('user_rating')
     comment = request.form.get('comment')
+    genre = request.form.get('genre')
     print("title: ", title)
     print("book_id: ", book_id)
     print("image: ", image)
@@ -87,5 +98,5 @@ def handler():
     print("rating: ", rating)
     print("user_id: ", user_id)
     print("status: ", status)
-    add_book(book_id, image, title, authors, user_id, rating, user_rating, status, comment)
+    add_book(book_id, image, title, authors, genre, user_id, rating, user_rating, status, comment)
     return redirect(url_for('main.home'))

@@ -2,7 +2,6 @@
   <h2>Search Results:</h2>
 </div>
 <div class="row">
-  <!-- map over this -->
   {% for book in results %}
   <div class="col-md-4">
     <div class="card mb-4 max-card-height hover">
@@ -32,6 +31,7 @@
             "authors":"{{book.authors}}",
             "image":"{{book.image}}",
             "rating":"{{book.rating}}",
+            "genre":"{{book.genre}}",
             "status":"Want To Read"}'>Want To Read</a></li>
           <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
             hx-vals='{"book_id":"{{book.id}}",
@@ -39,6 +39,7 @@
             "authors":"{{book.authors}}",
             "image":"{{book.image}}",
             "rating":"{{book.rating}}",
+            "genre":"{{book.genre}}",
             "status":"Reading"}'>Reading</a></li>
           <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
             hx-vals='{"book_id":"{{book.id}}",
@@ -46,6 +47,7 @@
             "authors":"{{book.authors}}",
             "image":"{{book.image}}",
             "rating":"{{book.rating}}",
+            "genre":"{{book.genre}}",
             "status":"Have Read"}'>Have Read</a></li>
           <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
             hx-vals='{"book_id":"{{book.id}}",
@@ -53,6 +55,7 @@
             "authors":"{{book.authors}}",
             "image":"{{book.image}}",
             "rating":"{{book.rating}}",
+            "genre":"{{book.genre}}",
             "status":"Favorites"}'>Favorites</a></li>
         </ul>
       </div>
@@ -63,3 +66,4 @@
 <h3>No results found</h3>
 {% endfor %}
 </div>
+

@@ -7,84 +7,160 @@
     <h1>MyBook</h1>
 
     <div class="row">
-      <form class="mt-2 col-md-6" hx-get="/search" hx-params="search,radioOptions"
-      hx-target="#Results" hx-swap="innerHTML">
-          <div class="d-flex mb-2">
-              <div class="form-outline flex-grow-1 me-2" data-mdb-input-init>
-                  <input type="text" name="search" id="search" class="form-control" />
-                  <label class="form-label" for="search">Search</label>
-              </div>
-              <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Search</button>
+      <form class="mt-2 col-md-6" hx-get="/search" hx-params="search,radioOptions" hx-target="#Results"
+        hx-swap="innerHTML">
+        <div class="d-flex mb-2">
+          <div class="form-outline flex-grow-1 me-2" data-mdb-input-init>
+            <input type="text" name="search" id="search" class="form-control" />
+            <label class="form-label" for="search">Search</label>
           </div>
-          <div class="d-flex">
-              <div class="me-2">
-                  Search By:
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio1" value="title" checked/>
-                  <label class="form-check-label" for="inlineRadio1">Title</label>
-              </div>
-              <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio2" value="author" />
-                  <label class="form-check-label" for="inlineRadio2">Author</label>
-              </div>
+          <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Search</button>
+        </div>
+        <div class="d-flex">
+          <div class="me-2">
+            Search By:
           </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio1" value="title" checked />
+            <label class="form-check-label" for="inlineRadio1">Title</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio2" value="author" />
+            <label class="form-check-label" for="inlineRadio2">Author</label>
+          </div>
+        </div>
       </form>
-  </div>
+    </div>
 
-    <div class="container" id="Results">
+    <div class="container mt-2" id="Results">
       <div class="">
-        <h2>Recommended For You:</h2>
+        <h2 class="fs-1">Recommended For You:</h2>
+        <h3 class="ms-4">{{ reason }}</h3>
         <div class="row">
-        {% for book in recommended_books %}
-        <div class="col-md-4">
-          <a href="/book/{{book.book_id}}" class="no-color hover">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title">{{book.title}}</h4>
-              <img src="{{book.image}}" alt="Book image"/>
-              <p>{{book.authors}}</p>
-            </div>
-          </div>  
-        </a>
-        </div>
-      {% endfor %}
-        </div>
+          {% for book in recommended_books %}
+          <div class="col-md-4">
+            <div class="card mb-4 max-card-height hover">
+              <a href="/book/{{book.id}}" class="no-color">
+                {% if book.image %}
+                <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+                {% endif %}
+                <div class="card-body">
+                  <h5 class="card-title">{{ book.title }}</h5>
+                  <p class="card-text">
+                    {{ book.authors }}
+                  </p>
+                  <p class="card-text">
+                    {{ book.description }}
+                  </p>
+                  
+              </a>
 
-        <h2>Reading</h2>
-        <div class="row">
+              <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button"
+                  id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
+                  Save
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                  "title":"{{book.title}}",
+                  "authors":"{{book.authors}}",
+                  "image":"{{book.image}}",
+                  "rating":"{{book.rating}}",
+                  "genre":"{{book.genre}}",
+                  "status":"Want To Read"}'>Want To Read</a></li>
+                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                  "title":"{{book.title}}",
+                  "authors":"{{book.authors}}",
+                  "image":"{{book.image}}",
+                  "rating":"{{book.rating}}",
+                  "genre":"{{book.genre}}",
+                  "status":"Reading"}'>Reading</a></li>
+                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                  "title":"{{book.title}}",
+                  "authors":"{{book.authors}}",
+                  "image":"{{book.image}}",
+                  "rating":"{{book.rating}}",
+                  "genre":"{{book.genre}}",
+                  "status":"Have Read"}'>Have Read</a></li>
+                  <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                  "title":"{{book.title}}",
+                  "authors":"{{book.authors}}",
+                  "image":"{{book.image}}",
+                  "rating":"{{book.rating}}",
+                  "genre":"{{book.genre}}",
+                  "status":"Favorites"}'>Favorites</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <h3>Save Books to your Profile to Get recommendations</h3>
+        {% endfor %}
+        {% if recommended_books %}
+        <div class="d-flex justify-content-center fs-5">
+          <a href="/recommendations">View More Recommendations</a>
+        </div>
+        {% endif %}
+      </div>
+
+      <h2>Reading</h2>
+      <div class="row">
         {% for book in books %}
         {% if book.status == "Reading" %}
         <div class="col-md-4">
-          <a href="/book/{{book.book_id}}" class="no-color hover">
-          <div class="card">
-            <div class="card-body">
-              <h3>Book Details:</h3>
-              <h4 class="card-title">{{book.title}}</h4>
-              <img src="{{book.image}}" alt="Book image"/>
-              <p>{{book.authors}}</p>
-            </div>
-          </div>  
-        </a>
+          <div class="card mb-4 max-card-height hover">
+            <a href="/book/{{book.book_id}}" class="no-color">
+              {% if book.image %}
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">
+                  {{ book.authors }}
+                </p>
+                <p class="card-text">
+                  {{ book.description }}
+                </p>
+              </div>
+            </a>
+          </div>
         </div>
         {% endif %}
-      {% endfor %}
-      </div>
-      </div>
-
-      <div class="">
-        <h2>Want to Read</h2>
-
-      </div>
-
-      <div class="">
-        <h2>Friends Reads</h2>
-
+        {% endfor %}
       </div>
     </div>
 
-  </div>
+    <div class="">
+      <h2>Want to Read</h2>
+      <div class="row">
+        {% for book in books %}
+        {% if book.status == "Want To Read" %}
+        <div class="col-md-4">
+          <div class="card mb-4 max-card-height hover">
+            <a href="/book/{{book.book_id}}" class="no-color">
+              {% if book.image %}
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">
+                  {{ book.authors }}
+                </p>
+                <p class="card-text">
+                  {{ book.description }}
+                </p>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
 
+    </div>
+
+  </div>
 
 </main>
 

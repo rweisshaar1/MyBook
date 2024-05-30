@@ -3,25 +3,23 @@
 
 <main>
   <div class="container mt-2">
-
-    <h1>MyBook</h1>
-
     <div class="card">
       <div class="card-body">
-      <h3>Book Details:</h3>
-      <h4 class="card-title">{{book.title}}</h4>
-        <img src="{{book.image}}" alt="Book image"/>
-        <p>{{book.authors}}</p>
+        <h3 class="card-title">{{book.title}}</h3>
+        <img src="{{book.image}}" alt="Book image" />
+        <p>{{ book.authors }}</p>
         <p>{{ book.description|safe }}</p>
         <p><strong>Published:</strong> {{book.publishedDate}}</p>
         <p><strong>Publisher:</strong> {{book.publisher}}</p>
         <p><strong>Pages:</strong> {{book.pageCount}}</p>
         <p><strong>Categories:</strong> {{book.categories}}</p>
         <p><strong>Rating:</strong> {{book.averageRating}}</p>
+
+        {% with book=book, saved_book=saved_book %}
+          {% include 'components/save-button.html' %}
+        {% endwith %}
       </div>
     </div>
-
-
 
   </div>
 </main>

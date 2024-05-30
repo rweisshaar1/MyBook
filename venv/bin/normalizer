@@ -1,4 +1,4 @@
-#!/Users/robbieweisshaar/Documents/personal-projects/book-app/venv/bin/python3
+#!/Users/robbieweisshaar/Documents/personal-projects/MyBook/venv/bin/python3.12
 # -*- coding: utf-8 -*-
 import re
 import sys

@@ -1,0 +1,90 @@
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button" id="dropdownMenuButton" data-mdb-dropdown-init
+      data-mdb-ripple-init aria-expanded="false">
+      Save
+    </button>
+    {% if saved_book %}
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        {% if saved_book.status != "Want To Read" %}
+        <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+          hx-vals='{"book_id":"{{book.id}}",
+          "title":"{{book.title}}",
+          "authors":"{{book.authors}}",
+          "image":"{{book.image}}",
+          "rating":"{{book.rating}}",
+          "genre":"{{book.genre}}",
+          "status":"Want To Read"}'>Want To Read</a></li>
+        {% endif %}
+        {% if saved_book.status != "Reading" %}
+        <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+          hx-vals='{"book_id":"{{book.id}}",
+          "title":"{{book.title}}",
+          "authors":"{{book.authors}}",
+          "image":"{{book.image}}",
+          "rating":"{{book.rating}}",
+          "genre":"{{book.genre}}",
+          "status":"Reading"}'>Reading</a></li>
+        {% endif %}
+        {% if saved_book.status != "Read" %}
+        <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+          hx-vals='{"book_id":"{{book.id}}",
+          "title":"{{book.title}}",
+          "authors":"{{book.authors}}",
+          "image":"{{book.image}}",
+          "rating":"{{book.rating}}",
+          "genre":"{{book.genre}}",
+          "status":"Read"}'>Have Read</a></li>
+        {% endif %}
+        {% if saved_book.status != "Favorite" %}
+        <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+          hx-vals='{"book_id":"{{book.id}}",
+          "title":"{{book.title}}",
+          "authors":"{{book.authors}}",
+          "image":"{{book.image}}",
+          "rating":"{{book.rating}}",
+          "genre":"{{book.genre}}",
+          "status":"Favorite"}'>Favorite</a></li>
+        {% endif %}
+        {% if saved_book.status %}
+        <li><a class="dropdown-item" hx-post="/removebook" hx-trigger="click" 
+          hx-vals='{"book_id":"{{book.id}}"}'>Remove from {{saved_book.status}} list</a></li>
+        {% endif %}
+    </ul>
+
+    {% else %}
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+      <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+        hx-vals='{"book_id":"{{book.id}}",
+        "title":"{{book.title}}",
+        "authors":"{{book.authors}}",
+        "image":"{{book.image}}",
+        "rating":"{{book.rating}}",
+        "genre":"{{book.genre}}",
+        "status":"Want To Read"}'>Want To Read</a></li>
+      <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+        hx-vals='{"book_id":"{{book.id}}",
+        "title":"{{book.title}}",
+        "authors":"{{book.authors}}",
+        "image":"{{book.image}}",
+        "rating":"{{book.rating}}",
+        "genre":"{{book.genre}}",
+        "status":"Reading"}'>Reading</a></li>
+      <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+        hx-vals='{"book_id":"{{book.id}}",
+        "title":"{{book.title}}",
+        "authors":"{{book.authors}}",
+        "image":"{{book.image}}",
+        "rating":"{{book.rating}}",
+        "genre":"{{book.genre}}",
+        "status":"Have Read"}'>Have Read</a></li>
+      <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" 
+        hx-vals='{"book_id":"{{book.id}}",
+        "title":"{{book.title}}",
+        "authors":"{{book.authors}}",
+        "image":"{{book.image}}",
+        "rating":"{{book.rating}}",
+        "genre":"{{book.genre}}",
+        "status":"Favorites"}'>Favorites</a></li>
+    </ul>
+    {% endif %}
+  </div>

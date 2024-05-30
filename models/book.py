@@ -4,6 +4,7 @@ import requests
 import random
 from sqlalchemy.sql.expression import func
 from util.globals import api_key
+from controllers.search import format_data
 
 class Book (db.Model):
     __tablename__ = 'books'
@@ -15,8 +16,8 @@ class Book (db.Model):
     author = db.Column(db.Text, nullable=False)
     genre = db.Column(db.Text)  # New genre column
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    rating = db.Column(db.Integer)
-    user_rating = db.Column(db.Integer, default=0)
+    rating = db.Column(db.Numeric, default=0)
+    user_rating = db.Column(db.Numeric, default=0)
     status = db.Column(db.String(255))
     comment = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
@@ -33,6 +34,8 @@ class Book (db.Model):
         self.user_rating = user_rating
         self.status = status
         self.comment = comment
+    def __repr__(self):
+        return f"<Book {self.book_id}: {self.title}>"
 
 def add_book(book_id, image, title, authors, genre, user_id, rating, user_rating, status, comment=None):
     if rating == '' or rating is None:
@@ -47,8 +50,8 @@ def add_book(book_id, image, title, authors, genre, user_id, rating, user_rating
 def get_books(user_id):
     return Book.query.filter_by(user_id=user_id).all()
 
-def get_book_by_id(book_id):
-    return Book.query.filter_by(id=book_id).first()
+def get_book_by_id(user_id, book_id):
+    return Book.query.filter_by(user_id=user_id).filter_by(book_id=book_id).first()
 
 # will look like update_book(1, {'title': 'New Title', 'author': 'New Author'})
 def update_book(book_id, updates):
@@ -66,36 +69,79 @@ def delete_book(book_id):
     return book
 
 # Get a number of random books from the database
-def get_random_books(n):
-    # Select a number of random books from the database
-    books = Book.query.order_by(func.random()).limit(n).all()
+def get_random_books(n, user_id):
+    # Select a number of random books from the database that belong to the user
+    books = Book.query.filter_by(user_id=user_id).order_by(func.random()).limit(n).all()
     return books
 
 # Get book recommendations for a user
-def get_recommendations(user_id, n):
+def get_recommendations(n, user_id, search_page):
     # Check if there are any books in the database
     if Book.query.count() == 0:
         return []
 
     # Get a number of random books
-    books = get_random_books(n)
+    books = get_random_books(n, user_id)
 
     # If no books are found, return an empty list
     if not books:
         print('No books in db found')
         return []
-
+        
+    # Construct the reason for the recommendations
+    
     # Construct the queries
-    queries = [f'"{book.title}"+inauthor:{book.author}' for book in books]
+    author_queries = [f'{book.author}' for book in books]
+    genre_queries = [f'{book.genre}' for book in books]
+
+    # Find the first non-empty author and genre
+    author_index = 0
+    while author_index < len(author_queries) and author_queries[author_index] == "":
+        author_index += 1
+
+    genre_index = 0
+    while genre_index < len(genre_queries) and genre_queries[genre_index] == "":
+        genre_index += 1
+
+    # If no non-empty author or genre is found, use an empty string
+    author = author_queries[author_index] if author_index < len(author_queries) else ""
+    genre = genre_queries[genre_index] if genre_index < len(genre_queries) else ""
+
+    reason = f"Because you liked {author} and {genre}"
 
     # Make API calls to the Google Books API for each query
     recommended_books = []
-    for query in queries:
-        response = requests.get(f'https://www.googleapis.com/books/v1/volumes?q={query}&key={api_key}')
-        data = response.json()
+    book_titles = set()  # Keep track of the titles of the books we've already added
+    for query in author_queries:
+        # Get books by author
+        print(query)
+        response_author = requests.get(f'https://www.googleapis.com/books/v1/volumes?q={query}&key={api_key}&maxResults=40')
+        data_author = response_author.json()
+        for book in data_author.get('items', []):
+            title = book['volumeInfo'].get('title', '')
+            if title not in book_titles:
+                recommended_books.append(book)
+                book_titles.add(title)
 
-        # Get the recommended books
-        recommended_books.extend([item for item in data['items'] if item['id'] not in [book.book_id for book in Book.query.filter_by(user_id=user_id).all()]])
+    for query in genre_queries:
+        # Get books by genre
+        print(query)
+        response_genre = requests.get(f'https://www.googleapis.com/books/v1/volumes?q={query}&key={api_key}&maxResults=40')
+        data_genre = response_genre.json()
+        for book in data_genre.get('items', []):
+            title = book['volumeInfo'].get('title', '')
+            if title not in book_titles:
+                recommended_books.append(book)
+                book_titles.add(title)
+
+    # Limit the number of books to 6
+    if not search_page:
+        if len(recommended_books) > 6:
+            recommended_books = random.sample(recommended_books, 6)
+
+        books = format_data({'items': recommended_books})
+    else:
+        books = format_data({'items': recommended_books})
 
     # Return the recommended books
-    return recommended_books
+    return books, reason

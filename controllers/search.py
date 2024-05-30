@@ -54,13 +54,15 @@ def format_data(data):
     for item in data['items']:
         authors = ", ".join(item['volumeInfo'].get('authors', []))
         description = Truncate_String(item['volumeInfo'].get('description', ''), 150)
-        formatted_data.append({
+        genre = ", ".join(item['volumeInfo'].get('categories', []))  # Extract genre
+        book_data = {
             'id': item['id'],
             'title': item['volumeInfo'].get('title', ''),
             'authors': authors,
             'description': description,
             'rating': item['volumeInfo'].get('averageRating', ''),
+            'genre': genre,
             'image': item['volumeInfo'].get('imageLinks', {}).get('thumbnail', ''),
-            'rating': item['volumeInfo'].get('averageRating', ''),
-        })
+        }
+        formatted_data.append(book_data)
     return formatted_data

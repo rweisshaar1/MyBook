@@ -1,0 +1,99 @@
+{% include 'components/header.html' %}
+{% include 'components/navbar.html' %}
+
+<main>
+    <div class="container mt-2 mb-4">
+        <div class="">
+            <h2>More Recommendations:</h2>
+            <h3 class="ms-4">{{ reason }}</h3>
+        </div>
+        <div class="row">
+            {% for book in recommended_books[:12] %}
+            <div class="col-md-4">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" type="button"
+                            id="dropdownMenuButton" data-mdb-dropdown-init data-mdb-ripple-init aria-expanded="false">
+                            Save
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                        "title":"{{book.title}}",
+                        "authors":"{{book.authors}}",
+                        "image":"{{book.image}}",
+                        "rating":"{{book.rating}}",
+                        "genre":"{{book.genre}}",
+                        "status":"Want To Read"}'>Want To Read</a></li>
+                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                        "title":"{{book.title}}",
+                        "authors":"{{book.authors}}",
+                        "image":"{{book.image}}",
+                        "rating":"{{book.rating}}",
+                        "genre":"{{book.genre}}",
+                        "status":"Reading"}'>Reading</a></li>
+                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                        "title":"{{book.title}}",
+                        "authors":"{{book.authors}}",
+                        "image":"{{book.image}}",
+                        "rating":"{{book.rating}}",
+                        "genre":"{{book.genre}}",
+                        "status":"Have Read"}'>Have Read</a></li>
+                            <li><a class="dropdown-item" hx-post="/addbook" hx-trigger="click" hx-vals='{"book_id":"{{book.id}}",
+                        "title":"{{book.title}}",
+                        "authors":"{{book.authors}}",
+                        "image":"{{book.image}}",
+                        "rating":"{{book.rating}}",
+                        "genre":"{{book.genre}}",
+                        "status":"Favorites"}'>Favorites</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+            {% endfor %}
+        <div class="row">
+            {% for book in recommended_books[12:] %}
+            <div class="col-md-4 hidden-books">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+
+                    </a>
+                    {% with book=book, saved_book=saved_book %}
+                        {% include 'components/save-button.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <div class="d-flex justify-content-center">
+            <button id="loadMore" class="btn btn-primary">Load More</button>
+        </div>
+    </div>
+</main>
+
+{% include 'components/footer.html' %}
