@@ -4,13 +4,17 @@ from util.globals import api_key
 from util.globals import Truncate_String
 
 def search_books(query, search_type):
-    if search_type == 'title':
-        search_type = f'intitle:{query}'
-    elif search_type == 'author':
-        search_type = f'inauthor:{query}'
+    query = query.replace(' ', '+')
 
-    google_books_api_url = f'https://www.googleapis.com/books/v1/volumes?q={search_type}&key={api_key}'
-    
+    if search_type == 'general':
+        search_type = f'{query}'
+    elif search_type == 'author':
+        search_type = f'+inauthor:{query}'
+
+    print(search_type)
+
+    google_books_api_url = f'https://www.googleapis.com/books/v1/volumes?q={search_type}&key={api_key}&maxResults=40'
+    print(google_books_api_url)
     response = requests.get(google_books_api_url)
     data = response.json()
 

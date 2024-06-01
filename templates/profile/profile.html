@@ -1,0 +1,153 @@
+{% include 'components/header.html' %}
+{% include 'components/navbar.html' %}
+
+<main>
+    <div class="container mt-2">
+
+        <h1>Hi {{ first_name }}</h1>
+
+        <div class="container">
+        <div class="mt-2">
+            <h2 class="fs-1">Your Favorites</h2>
+            <div class="row">
+            {% if favorites %}
+            {% for book in favorites %}
+            <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.book_id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+                    </a>
+
+                    {% with book=book, saved_book=book %}
+                    {% include 'components/save-button.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2 class="ms-2 ">Add Books to Your Favorites List</h2>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-2">
+
+        <h2 class="fs-1">Currently Reading</h2>
+        <div class="row">
+            {% if reading %}
+            {% for book in reading %}
+            <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.book_id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+                    </a>
+
+                    {% with book=book, saved_book=book %}
+                    {% include 'components/save-button.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2 class="ms-2 ">Add Books to Your Reading List</h2>
+        {% endif %}
+    </div>
+
+
+    <div class="mt-2">
+        <h2 class="fs-1">Want to Read</h2>
+        <div class="row">
+            {% if want_to_read %}
+            {% for book in want_to_read %}
+            <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.book_id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+                    </a>
+
+                    {% with book=book, saved_book=book %}
+                    {% include 'components/save-button.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2 class="ms-2 ">Add Books to Your Want To Read List</h2>
+        {% endif %}
+    </div>
+
+    <div class="mt-2">
+        <h2 class="fs-1">Have Read</h2>
+        <div class="row">
+            {% if have_read %}
+            {% for book in have_read %}
+            <div class="col-md-4" id="book-{{book.id}}" hx-swap="outerHTML">
+                <div class="card mb-4 max-card-height hover">
+                    <a href="/book/{{book.book_id}}" class="no-color">
+                        {% if book.image %}
+                        <img src="{{ book.image }}" class="card-img-top square" alt="Book Cover for {{book.title}}" />
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ book.title }}</h5>
+                            <p class="card-text">
+                                {{ book.authors }}
+                            </p>
+                            <p class="card-text">
+                                {{ book.description }}
+                            </p>
+                    </a>
+
+                    {% with book=book, saved_book=book %}
+                    {% include 'components/save-button.html' %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <h2 class="ms-2 ">Add Books to Have Read List</h2>
+        {% endif %}
+    </div>
+
+</div>
+    </div>
+
+    </div>
+
+</main>
+
+
+{% include 'components/footer.html' %}

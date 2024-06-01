@@ -21,8 +21,11 @@ def login():
         user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            session['email'] = email  # store the email in the session
-            return redirect(url_for('main.home'))  # replace 'main.home' with your main page's endpoint
+            session['email'] = email
+            session['user_id'] = user.id
+            session['first_name'] = user.first_name
+            session['last_name'] = user.last_name
+            return redirect(url_for('main.home'))
         else:
             return render_template('login/login.html', error='Invalid email or password')
     print('GET')
@@ -138,3 +141,35 @@ def deleting_book():
     
     response = make_response("", 200)
     return response
+
+@main.route('/profile')
+@login_required
+def get_profile():
+    books = get_books(current_user.id)
+    first_name = session['first_name']
+
+    reading = []
+    want_to_read = []
+    favorites = []
+    have_read = []
+
+    for book in books:
+        if book.status == 'Reading':
+            reading.append(book)
+        elif book.status == 'Read':
+            have_read.append(book)
+        elif book.status == 'Favorite':
+            favorites.append(book)
+        elif book.status == 'Want To Read':
+            want_to_read.append(book)
+        
+    print(reading)
+    print(want_to_read)
+    print("fav", favorites)
+    return render_template('profile/profile.html', 
+                           books=books, 
+                           first_name=first_name,
+                           reading=reading,
+                           want_to_read=want_to_read,
+                           favorites=favorites,
+                           have_read=have_read)

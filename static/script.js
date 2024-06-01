@@ -1,8 +1,8 @@
-document.getElementById('loadMore').addEventListener('click', function() {
+function loadMore(event) {
     console.log('Load More button clicked');
     var hiddenBooks = document.getElementsByClassName('hidden-books');
     for (var i = 0; i < hiddenBooks.length; i++) {
         hiddenBooks[i].style.display = 'block';
     }
-    this.style.display = 'none';  // Hide the "Load More" button
-});
+    event.target.style.display = 'none';  // Hide the "Load More" button
+}

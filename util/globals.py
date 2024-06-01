@@ -1,4 +1,5 @@
 import os
+from flask import session
 from dotenv import load_dotenv
 
 # Get the absolute path to the current script

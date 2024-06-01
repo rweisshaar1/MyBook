@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- Status: Want to Read, Reading, Read, Favorite
+-- Status: Want To Read, Reading, Read, Favorite
 CREATE TABLE IF NOT EXISTS books (
     id SERIAL PRIMARY KEY,
     book_id TEXT NOT NULL,

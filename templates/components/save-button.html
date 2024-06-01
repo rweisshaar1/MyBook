@@ -76,7 +76,7 @@
         "image":"{{book.image}}",
         "rating":"{{book.rating}}",
         "genre":"{{book.genre}}",
-        "status":"Have Read"}'>Have Read</a></li>
+        "status":"Read"}'>Have Read</a></li>
       <li><a class="dropdown-item clickable" hx-post="/addbook" hx-trigger="click" 
         hx-vals='{"book_id":"{{book.id}}",
         "title":"{{book.title}}",
@@ -84,7 +84,7 @@
         "image":"{{book.image}}",
         "rating":"{{book.rating}}",
         "genre":"{{book.genre}}",
-        "status":"Favorites"}'>Favorites</a></li>
+        "status":"Favorite"}'>Favorite</a></li>
     </ul>
     {% endif %}
   </div>
