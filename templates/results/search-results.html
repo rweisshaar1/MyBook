@@ -1,61 +1,134 @@
-<div class="">
-  <h2>Search Results:</h2>
-</div>
-<div class="row">
-  {% for book in results[:9] %}
-  <div class="col-md-4">
-    <div class="card mb-4 max-card-height hover">
-      <a href="/book/{{book.id}}" class="no-color" href="#">
-        {% if book.image %}
-        <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ book.title }}</h5>
-          <p class="card-text">
-            {{ book.authors }}
-          </p>
-          <p class="card-text">
-            {{ book.description }}
-          </p>
-      </a>
+{% include 'components/header.html' %}
+{% include 'components/navbar.html' %}
 
-      {% with book=book, saved_book=saved_book %}
-      {% include 'components/save-button.html' %}
-      {% endwith %}
+<main>
+  <div class="container mt-2">
+
+    <h1>MyBook</h1>
+
+    <div class="row">
+      <form class="mt-2 col-md-6" hx-get="/search" hx-push-url="true" hx-params="search,radioOptions" hx-target="body"
+        hx-swap="outerHTML">
+        <div class="d-flex mb-2">
+          <div class="form-outline flex-grow-1 me-2" data-mdb-input-init>
+            <input type="text" name="search" id="search" class="form-control" value="{{query}}" />
+            <label class="form-label" for="search">Search</label>
+          </div>
+          <button type="submit" class="btn btn-primary" data-mdb-ripple-init>Search</button>
+        </div>
+        <div class="d-flex">
+          <div class="me-2">
+            Search By:
+          </div>
+          {% if search_type == 'general' %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio1" value="general"
+              checked />
+            <label class="form-check-label" for="inlineRadio1">General Search</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio2" value="author" />
+            <label class="form-check-label" for="inlineRadio2">Author</label>
+          </div>
+          {% else %}
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio1" value="general" />
+            <label class="form-check-label" for="inlineRadio1">General Search</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="radioOptions" id="inlineRadio2" value="author"
+              checked />
+            <label class="form-check-label" for="inlineRadio2">Author</label>
+          </div>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+
+    <div hx-target="this" hx-swap="innerHTML">
+      <div class="">
+        <h2>Search Results:</h2>
+      </div>
+      <div class="row">
+        {% for book in results %}
+        <div class="col-md-4">
+          <div class="card mb-4 max-card-height hover">
+            <a href="/book/{{book.id}}" class="no-color" href="#">
+              {% if book.image %}
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">
+                  {{ book.authors }}
+                </p>
+                <p class="card-text">
+                  {{ book.description }}
+                </p>
+            </a>
+
+            {% with book=book, saved_book=saved_book %}
+            {% include 'components/save-button.html' %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <h3>No results found</h3>
+      {% endfor %}
+
+      <div class="row">
+        {% for book in results[9:] %}
+        <div class="col-md-4 hidden-books">
+          <div class="card mb-4 max-card-height hover">
+            <a href="/book/{{book.id}}" class="no-color">
+              {% if book.image %}
+              <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
+              {% endif %}
+              <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">
+                  {{ book.authors }}
+                </p>
+                <p class="card-text">
+                  {{ book.description }}
+                </p>
+
+            </a>
+            {% with book=book, saved_book=saved_book %}
+            {% include 'components/save-button.html' %}
+            {% endwith %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+
+      <div class="d-flex justify-content-center mb-4">
+        {% if page > 1 %}
+        <a hx-get="{{ url_for('main.search', search=query, radioOptions=search_type, page=page-1) }}" hx-push-url="true"
+          class="btn btn-primary" hx-target="body">Previous</a>
+        {% endif %}
+
+        <!-- Individual page number links -->
+        {% for i in range(page_range_start, page_range_end) %}
+        {% if i == page %}
+        <span class="ms-2 btn btn-secondary disabled">{{ i }}</span>
+        {% else %}
+        <a hx-get="{{ url_for('main.search', search=query, radioOptions=search_type, page=i) }}" hx-push-url="true"
+          class="ms-2 btn btn-primary" hx-target="body">{{ i }}</a>
+        {% endif %}
+        {% endfor %}
+
+        {% if results|length == 12 %}
+        <a hx-get="{{ url_for('main.search', search=query, radioOptions=search_type, page=page+1) }}" hx-push-url="true"
+          class="ms-2 btn btn-primary">Next</a>
+        {% endif %}
+      </div>
+
     </div>
   </div>
-</div>
-{% else %}
-<h3>No results found</h3>
-{% endfor %}
 
-<div class="row">
-  {% for book in results[9:] %}
-  <div class="col-md-4 hidden-books">
-    <div class="card mb-4 max-card-height hover">
-      <a href="/book/{{book.id}}" class="no-color">
-        {% if book.image %}
-        <img src="{{ book.image }}" class="card-img-top square" alt="Book image" />
-        {% endif %}
-        <div class="card-body">
-          <h5 class="card-title">{{ book.title }}</h5>
-          <p class="card-text">
-            {{ book.authors }}
-          </p>
-          <p class="card-text">
-            {{ book.description }}
-          </p>
+</main>
 
-      </a>
-      {% with book=book, saved_book=saved_book %}
-      {% include 'components/save-button.html' %}
-      {% endwith %}
-    </div>
-  </div>
-</div>
-{% endfor %}
 
-<div class="d-flex justify-content-center mb-4">
-  <button class="btn btn-primary" onclick="loadMore(event)">Load More</button>
-</div>
-
+{% include 'components/footer.html' %}

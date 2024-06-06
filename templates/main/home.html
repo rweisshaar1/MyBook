@@ -7,8 +7,8 @@
     <h1>MyBook</h1>
 
     <div class="row">
-      <form class="mt-2 col-md-6" hx-get="/search" hx-params="search,radioOptions" hx-target="#Results"
-        hx-swap="innerHTML">
+      <form class="mt-2 col-md-6" hx-get="/search" hx-push-url="true" hx-params="search,radioOptions" hx-target="body"
+        hx-swap="outerHTML">
         <div class="d-flex mb-2">
           <div class="form-outline flex-grow-1 me-2" data-mdb-input-init>
             <input type="text" name="search" id="search" class="form-control" />
@@ -32,7 +32,7 @@
       </form>
     </div>
 
-    <div class="container mt-2" id="Results">
+    <div class="container mt-2" id="Results" hx-swap="innerHTML">
       <div class="">
         <h2 class="fs-1">Recommended For You:</h2>
         {% if recommended_books %}

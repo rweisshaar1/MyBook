@@ -71,11 +71,23 @@ def recommendations():
 def search():
     query = request.args.get('search')
     search_type = request.args.get('radioOptions')
+    page = request.args.get('page', 1, type=int)
     # print(query)
     # print(search_type)
-    results = search_books(query, search_type)
+    results, total_pages = search_books(query, search_type, page)
+    page_range_start = max(1, page - 2)
+    page_range_end = min(page + 3, total_pages + 1)
+
+    print("query: ", query)
+
     return render_template('results/search-results.html',
-                           results=results)
+                           results=results,
+                           query=query,
+                           search_type=search_type,
+                           page=page,
+                            total_pages=total_pages,
+                           page_range_start=page_range_start,
+                           page_range_end=page_range_end,)
 
 @main.route('/book/<book_id>')
 @login_required
@@ -83,7 +95,9 @@ def get_book(book_id):
     print(book_id)
     book = search_book_by_id(book_id)
     saved_book = get_book_by_id(current_user.id, book_id)
-    return render_template('results/book.html', book=book, saved_book=saved_book)
+    return render_template('results/book.html', 
+                           book=book, 
+                           saved_book=saved_book)
 
 # POST routes
 @main.route('/addbook', methods=['POST'])
@@ -106,7 +120,17 @@ def handler():
     # print("rating: ", rating)
     # print("user_id: ", user_id)
     # print("status: ", status)
-    add_book(book_id, image, title, authors, genre, user_id, rating, user_rating, status, comment)
+    add_book(
+        book_id, 
+        image, 
+        title, 
+        authors, 
+        genre, 
+        user_id, 
+        rating, 
+        user_rating, 
+        status, 
+        comment)
     return redirect(url_for('main.home'))
 
 @main.route('/updatebook', methods=['PUT'])
