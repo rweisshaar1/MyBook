@@ -197,3 +197,21 @@ def get_profile():
                            want_to_read=want_to_read,
                            favorites=favorites,
                            have_read=have_read)
+
+@main.route('/createuser', methods=['POST', 'GET'])
+def create_user():
+    if request.method == 'POST':
+        first_name = request.form.get('first_name')
+        last_name = request.form.get('last_name')
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        if user:
+            return render_template('login/login.html', error='Email already exists')
+        new_user = User(first_name=first_name, last_name=last_name, email=email, password=password)
+        new_user.save()
+        return redirect(url_for('main.login'))
+    else:
+        return render_template('login/create-user.html')
+
+
